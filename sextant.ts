@@ -8,15 +8,16 @@ enum Hemisphere {
   West = 'W',
 }
 
+
 /**
- * An angle as double that can be converted from and to degrees, seconds, minutes
+ * An angle as double that can be converted from and to degrees, seconds, minutes.
  */
 class Angle {
   readonly degree: number
 
   /**
    * Creates a new angle.
-   * @param degree The value of the angle. The value of the angle. Negative values are also allowed
+   * @param degree The value of the angle. The value of the angle. Negative values are also allowed.
    */
   constructor(degree: number) {
     this.degree = degree
@@ -24,13 +25,17 @@ class Angle {
 
   /**
    * Creates a new angle based on degrees, minutes, seconds.
-   * @param degree The degrees (May be negative)
-   * @param minutes The minutes (Positive values only)
-   * @param seconds The seconds as double (Positive values only)
+   * @param degree The degrees (May be negative).
+   * @param minutes The minutes (Positive values only).
+   * @param seconds The seconds as double (Positive values only).
    */
   static from_deg_min_sec(degree: number, minutes: number, seconds: number): Angle {
     const degree_sum: number = degree + minutes/60 + seconds/3600
     return new Angle(degree_sum)
+  }
+
+  static get zero(): Angle {
+    return new Angle(0)
   }
 
   /**
@@ -49,14 +54,15 @@ class Angle {
   }
 
   /**
-   * Converts the angle into a string with degrees, minutes and seconds
-   * @return A string of the form "degree°minutes'seconds"
+   * Converts the angle into a string with degrees, minutes and seconds.
+   * @return A string of the form "degree°minutes'seconds".
    */
   toString(): string {
     const [deg, min, sec]: [number, number, number] = this.to_deg_min_sec()
     return `${deg}°${min}'${sec.toFixed(1)}"`
   }
 }
+
 
 /**
  * A Coordinate as an extension to an angle providing a hemisphere.
@@ -66,7 +72,7 @@ class Coordinate extends Angle {
 
   /**
    * Creates a new Coordinate.
-   * @param degree The degrees of the coordinate as double.
+   * @param degree The degrees of the coordinate (positive values only).
    * @param hemisphere The hemisphere in which the coordinate is located.
    */
   constructor(degree: number, hemisphere: Hemisphere) {
@@ -77,9 +83,9 @@ class Coordinate extends Angle {
 
   /**
    * Creates a new Coordinate based on the degrees, minutes, seconds and the hemisphere.
-   * @param degree The degrees (May be negative)
-   * @param minutes The minutes (Positive values only)
-   * @param seconds The seconds as double (Positive values only)
+   * @param degree The degrees (May be negative).
+   * @param minutes The minutes (Positive values only).
+   * @param seconds The seconds as double (Positive values only).
    * @param hemisphere The hemisphere in which the coordinate is located.
    */
   static from_deg_mim_sec(degree: number, minutes: number, seconds: number, hemisphere): Coordinate {
@@ -98,53 +104,89 @@ class Coordinate extends Angle {
   }
 }
 
+
+/**
+ * A position on the globe determined by the latitude and longitude.
+ */
 class Position {
-  /**
-   * The latitude.
-   */
-  readonly lat: Coordinate
-  /**
-   * The longitude.
-   */
-  readonly lng: Coordinate
+  readonly latitude: Coordinate
+  readonly longitude: Coordinate
 
   /**
    * Creates a new Position.
-   * @param lat The latitude.
-   * @param lng The longitude.
+   * @param latitude The latitude.
+   * @param longitude The longitude.
    */
-  constructor(lat: Coordinate, lng: Coordinate) {
-    this.lat = lat
-    this.lng = lng
+  constructor(latitude: Coordinate, longitude: Coordinate) {
+    this.latitude = latitude
+    this.longitude = longitude
   }
 
   /**
    * Converts this position into a string of its coordinates.
-   * @return A string in the form "Latitude Longitude" in their representation.
+   * @return A string in the form "latitude longitude" in their representation.
    */
   toString(): string {
-    return `${this.lat.toString()} ${this.lng.toString()}`
+    return `${this.latitude.toString()} ${this.longitude.toString()}`
   }
 }
 
+
+/**
+ * A sextant that can determine the position based on a measurement.
+ */
 class Sextant {
   readonly measuring_time: Date
-  readonly angle: Coordinate
-  readonly sun_declination: Coordinate
+  readonly measured_angle: Angle
+  readonly sun_declination: Angle
+  readonly index_error: Angle
 
-  constructor(measuring_time: Date, angle: Coordinate, sun_declination: Coordinate) {
+  /**
+   * Creates a new Sextant.
+   * @param measuring_time The time at which the measurement was made.
+   * @param measured_angle The measured horizontal angle.
+   * @param sun_declination The sun declination of the day on which the measurement was made.
+   * @param index_error The index error of the sextant.
+   */
+  constructor(measuring_time: Date, measured_angle: Angle, sun_declination: Angle, index_error?: Angle) {
     this.measuring_time = measuring_time
-    this.angle = angle
+    this.measured_angle = measured_angle
     this.sun_declination = sun_declination
+    this.index_error = index_error ?? Angle.zero
   }
 
-  /*calculate_lat(): Coordinate {
-    const celestial_equator_height: Coordinate = new Coordinate(this.angle.valueOf() - this.sun_declination.valueOf())
-    const lat: Coordinate = new Coordinate(90 - celestial_equator_height.valueOf())
-    return lat
-  }*/
+  /**
+   * Calculates the position based on the measurement.
+   * @return The calculated position.
+   */
+  get position(): Position {
+    const lat = this.calculate_lat()
+    const lng = this.calculate_lng()
+    return new Position(lat, lng)
+  }
+
+  /**
+   * Calculates the latitude based on the measurement.
+   * @return The calculated longitude.
+   */
+  calculate_lat(): Coordinate {
+    const corrected_measurement = this.measured_angle.valueOf() + this.index_error.valueOf()
+    const celestial_equator_height = corrected_measurement.valueOf() - this.sun_declination.valueOf()
+    return new Coordinate(90 - celestial_equator_height.valueOf(), Hemisphere.North)
+  }
+
+  /**
+   * Calculates the longitude based on the measurement.
+   * @return The calculated longitude.
+   */
+  calculate_lng(): Coordinate {
+    // TODO: Implement
+    return new Coordinate(0, Hemisphere.West)
+  }
 }
 
 
-const a = new Coordinate(52.17492764, Hemisphere.North)
-console.log(a.toString())
+const measured = Angle.from_deg_min_sec(23, 17, 0)
+const sun_decl = Angle.from_deg_min_sec(-17, 56, 0)
+const sextant = new Sextant(new Date(Date.now()), measured, sun_decl)
+console.log(sextant.position.toString())
