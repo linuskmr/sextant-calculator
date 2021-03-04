@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Sextant</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="sextant.js"></script>
+    <script src="index.js"></script>
+</head>
+<body>
+
+<div class="ui container">
+    <form class="ui form">
+        <div class="field">
+            <label>Measured Angle</label>
+            <input type="text" id="measured-angle" value="23° 17' 58&quot;">
+        </div>
+        <div class="field">
+            <label>Sun Declination</label>
+            <input type="text" id="sun-declination" value="-16° 41' 12&quot;">
+        </div>
+        <div class="field">
+            <label>Index Error</label>
+            <input type="text" id="index-error" value="0° 0' 0&quot;">
+        </div>
+        <button class="ui button" type="button" onclick="calculate()">Calculate</button>
+    </form>
+    <br>
+    <div class="field">
+        <label>Calculated Position</label>
+        <pre id="calculated-position"></pre>
+    </div>
+</div>
+
+</body>
+</html>
