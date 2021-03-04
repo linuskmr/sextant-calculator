@@ -13,14 +13,14 @@ enum Hemisphere {
  * An angle as double that can be converted from and to degrees, seconds, minutes.
  */
 class Angle {
-  readonly degree: number
+  readonly angle_size: number
 
   /**
    * Creates a new angle.
-   * @param degree The value of the angle. The value of the angle. Negative values are also allowed.
+   * @param degree The value of the angle in degrees. Negative values are also allowed.
    */
   constructor(degree: number) {
-    this.degree = degree
+    this.angle_size = degree
   }
 
   /**
@@ -34,6 +34,16 @@ class Angle {
     return new Angle(degree_sum)
   }
 
+  /**
+   * Creates a new Angle based on the given string.
+   * @param str A string in the form of DD° MM' SS".
+   */
+  static from_str(str: string): Angle {
+    const reg = /(-*\d+)°\s*(\d+)'\s*(\d+)"/
+    const [,degrees, minutes, seconds] = str.match(reg).map(n => parseInt(n))
+    return Angle.from_deg_min_sec(degrees, minutes, seconds)
+  }
+
   static get zero(): Angle {
     return new Angle(0)
   }
@@ -43,23 +53,27 @@ class Angle {
    * @return A tuple of the form [degrees, minutes, seconds].
    */
   to_deg_min_sec(): [number, number, number] {
-    const degree_int = Math.floor(this.degree)
-    const minutes_int = Math.floor((this.degree - degree_int) * 60)
-    const seconds = (this.degree - degree_int - minutes_int/60) * 3600
+    const degree_int = Math.floor(this.angle_size)
+    const minutes_int = Math.floor((this.angle_size - degree_int) * 60)
+    const seconds = (this.angle_size - degree_int - minutes_int/60) * 3600
     return [degree_int, minutes_int, seconds]
   }
 
   valueOf(): number {
-    return this.degree
+    return this.angle_size
   }
 
   /**
    * Converts the angle into a string with degrees, minutes and seconds.
-   * @return A string of the form "degree°minutes'seconds".
+   * @return A string of the form "degree° minutes' seconds".
    */
   toString(): string {
     const [deg, min, sec]: [number, number, number] = this.to_deg_min_sec()
-    return `${deg}°${min}'${sec.toFixed(1)}"`
+    const deg_str = deg.toString().padStart(2)
+    const min_str = min.toString().padStart(2)
+    const sec_numbers = sec.toFixed(1).split(".")
+    const sec_str = sec_numbers[0].padStart(2) + "." + (sec_numbers[1] ?? "0")
+    return `${deg_str}° ${min_str}' ${sec_str}"`
   }
 }
 
@@ -95,9 +109,19 @@ class Coordinate extends Angle {
   }
 
   /**
+   * Creates a new Coordinate based on the given string.
+   * @param str A string in the form of DD° MM' SS" H.
+   */
+  static from_str(str: string): Coordinate {
+    const angle = Angle.from_str(str)
+    const hemisphere = Hemisphere.North // TODO: Implement
+    return new Coordinate(angle.valueOf(), hemisphere)
+  }
+
+  /**
    * Converts this Coordinate into a string of the angle followed by the hemisphere.
    * @see Angle toString.
-   * @return A string of the form "Angle Hemisphere", each in its representation.
+   * @return A string of the form "angle hemisphere", each in its representation.
    */
   toString(): string {
     return super.toString() + " " + this.hemisphere;
@@ -118,16 +142,18 @@ class Position {
    * @param longitude The longitude.
    */
   constructor(latitude: Coordinate, longitude: Coordinate) {
+    console.assert(latitude.hemisphere == Hemisphere.North || latitude.hemisphere == Hemisphere.South)
+    console.assert(longitude.hemisphere == Hemisphere.West || longitude.hemisphere == Hemisphere.East)
     this.latitude = latitude
     this.longitude = longitude
   }
 
   /**
    * Converts this position into a string of its coordinates.
-   * @return A string in the form "latitude longitude" in their representation.
+   * @return A string in the form "latitude\nlongitude" in their representation.
    */
   toString(): string {
-    return `${this.latitude.toString()} ${this.longitude.toString()}`
+    return `${this.latitude.toString()}\n${this.longitude.toString()}`
   }
 }
 
