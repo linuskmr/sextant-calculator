@@ -4,35 +4,65 @@
     <title>Sextant</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
     <link rel="stylesheet" href="index.css">
-    <script src="sextant.js"></script>
-    <script src="index.js"></script>
+    <script src="./sextant.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="index.js?v=10"></script>
 </head>
 <body>
 
-<div class="ui container">
-    <form class="ui form">
-        <div class="field">
-            <label>Measured Angle</label>
-            <input type="text" id="measured-angle" value="23° 17' 58&quot;">
-        </div>
-        <div class="field">
-            <label>Sun Declination</label>
-            <input type="text" id="sun-declination" value="-16° 41' 12&quot;">
-        </div>
-        <div class="field">
-            <label>Index Error</label>
-            <input type="text" id="index-error" value="0° 0' 0&quot;">
-        </div>
-        <button class="ui button" type="button" onclick="calculate()">Calculate</button>
-    </form>
-    <br>
-    <div class="field">
-        <label>Calculated Position</label>
-        <pre id="calculated-position"></pre>
-    </div>
+<p>Measured Angle</p>
+<div>
+    <label>
+        <input type="text" maxlength="2" v-model="measured_angle.deg">
+        °
+    </label>
+    <label>
+        <input type="text" maxlength="2" value="17">
+        '
+    </label>
+    <label>
+        <input type="text" maxlength="2" value="56">
+        "
+    </label>
 </div>
+
+<p>Sun Declination</p>
+<div>
+    <label>
+        <input type="text" maxlength="2" value="-16">
+        °
+    </label>
+    <label>
+        <input type="text" maxlength="2" value="41">
+        '
+    </label>
+    <label>
+        <input type="text" maxlength="2" value="12">
+        "
+    </label>
+</div>
+
+<p>Index Error</p>
+<div id="index_error">
+    <label>
+        <input type="text" maxlength="2" value="0">
+        °
+    </label>
+    <label>
+        <input type="text" maxlength="2" value="0">
+        '
+    </label>
+    <label>
+        <input type="text" maxlength="2" value="0">
+        "
+    </label>
+</div>
+
+<button onclick="get_location()">Location</button>
+
+<p>Calculated Position</p>
+<pre id="calculated-position"></pre>
 
 </body>
 </html>
