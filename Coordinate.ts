@@ -1,5 +1,5 @@
 import { Angle } from "./Angle"
-import { Hemisphere } from "./Hemisphere"
+import { Hemisphere, fromString as hemisphereFromString } from "./Hemisphere"
 
 
 /**
@@ -26,7 +26,7 @@ export class Coordinate extends Angle {
      * @param seconds The seconds as double (Positive values only).
      * @param hemisphere The hemisphere in which the coordinate is located.
      */
-    static from_deg_mim_sec(degree: number, minutes: number, seconds: number, hemisphere): Coordinate {
+    static from_deg_min_sec_hemisphere(degree: number, minutes: number, seconds: number, hemisphere): Coordinate {
         degree = Math.abs(degree)
         const angle = super.from_deg_min_sec(degree, minutes, seconds)
         return new Coordinate(angle.valueOf(), hemisphere)
@@ -38,7 +38,8 @@ export class Coordinate extends Angle {
      */
     static from_str(str: string): Coordinate {
         const angle = Angle.from_str(str)
-        const hemisphere = Hemisphere.North // TODO: Implement
+        const str_split = str.split(' ')
+        const hemisphere = hemisphereFromString(str_split[str_split.length-1])
         return new Coordinate(angle.valueOf(), hemisphere)
     }
 
@@ -48,6 +49,6 @@ export class Coordinate extends Angle {
      * @return A string of the form "angle hemisphere", each in its representation.
      */
     toString(): string {
-        return super.toString() + " " + this.hemisphere;
+        return `${super.toString()} ${this.hemisphere}`;
     }
 }
