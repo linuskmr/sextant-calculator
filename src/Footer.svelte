@@ -5,7 +5,7 @@
     </p>
     <ul>
         <li>👷 Build with <a href="https://svelte.dev">Svelte</a></li>
-        <li>🚀 Deployed with <a href="https://vercel.com/">Vercel</a></li>
+        <li>🚀 Deployed via <a href="https://vercel.com/">Vercel</a></li>
         <li>📝 Sourcecode on <a href="https://github.com/linuskmr/sextant-calculator">GitHub</a></li>
     </ul>
 </footer>
