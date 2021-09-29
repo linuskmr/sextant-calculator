@@ -6,7 +6,7 @@ import { Hemisphere } from "./Hemisphere";
 /**
  * A sextant that can determine the position based on a measurement.
  */
-class Sextant {
+export class Sextant {
   readonly measuring_time: Date
   readonly measured_angle: Angle
   readonly sun_declination: Angle
