@@ -1,5 +1,5 @@
-import { Angle } from "./Angle"
-import { Hemisphere, fromString as hemisphereFromString } from "./Hemisphere"
+import { Angle } from "./angle"
+import { Hemisphere, fromString as hemisphereFromString } from "./hemisphere"
 
 
 /**

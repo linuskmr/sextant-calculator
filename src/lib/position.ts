@@ -1,5 +1,5 @@
-import type { Coordinate } from "./Coordinate"
-import { Hemisphere } from "./Hemisphere"
+import type { Coordinate } from "./coordinate"
+import { Hemisphere } from "./hemisphere"
 
 /**
  * A position on the globe determined by the latitude and longitude.

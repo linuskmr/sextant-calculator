@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Sextant} from "./lib/sextant";
-    import {Angle} from "./lib/Angle";
+    import {Angle} from "./lib/angle";
     import Footer from "./Footer.svelte";
 
     let measured_angle = 42
