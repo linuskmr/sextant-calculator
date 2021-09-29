@@ -1,7 +1,7 @@
-import { Angle } from "./Angle"
-import { Position } from "./Position"
-import { Coordinate } from "./Coordinate";
-import { Hemisphere } from "./Hemisphere";
+import { Angle } from "./angle"
+import { Position } from "./position"
+import { Coordinate } from "./coordinate";
+import { Hemisphere } from "./hemisphere";
 
 /**
  * A sextant that can determine the position based on a measurement.
@@ -55,9 +55,3 @@ export class Sextant {
     return new Coordinate(0, Hemisphere.West)
   }
 }
-
-
-const measured = Angle.from_deg_min_sec(23, 17, 0)
-const sun_decl = Angle.from_deg_min_sec(-17, 56, 0)
-const sextant = new Sextant(new Date(Date.now()), measured, sun_decl)
-console.log(sextant.position.toString())
