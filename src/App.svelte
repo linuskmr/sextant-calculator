@@ -3,7 +3,7 @@
     import {Angle} from "./lib/Angle";
     import Footer from "./Footer.svelte";
 
-    let measured_angle = 10
+    let measured_angle = 42
     let date = new Date().toISOString().substring(0, 10) // https://stackoverflow.com/a/14246394
     $: sextant = new Sextant(new Date(), new Angle(measured_angle), Angle.zero, Angle.zero)
 
