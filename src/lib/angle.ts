@@ -36,7 +36,7 @@ export class Angle {
     /**
      * Returns an Angle with zero degrees.
      */
-    static get zero(): Angle {
+    static zero(): Angle {
         return new Angle(0)
     }
 
