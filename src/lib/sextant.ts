@@ -23,7 +23,7 @@ export class Sextant {
     this.measuring_time = measuring_time
     this.measured_angle = measured_angle
     this.sun_declination = sun_declination
-    this.index_error = index_error ?? Angle.zero
+    this.index_error = index_error ?? Angle.zero()
   }
 
   /**
@@ -52,6 +52,6 @@ export class Sextant {
    */
   calculate_lng(): Coordinate {
     // TODO: Implement
-    return new Coordinate(0, Hemisphere.West)
+    return new Coordinate(NaN, Hemisphere.West)
   }
 }
