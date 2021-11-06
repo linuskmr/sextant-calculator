@@ -1,13 +1,13 @@
-import { Angle } from "./angle"
-import { Position } from "./position"
-import { Coordinate } from "./coordinate";
-import { Hemisphere } from "./hemisphere";
+import {Angle} from "./angle"
+import {Position} from "./position"
+import {Coordinate} from "./coordinate";
+import {Hemisphere} from "./hemisphere";
 
 /**
  * A sextant that can determine the position based on a measurement.
  */
 export class Sextant {
-  readonly measuring_time: Date
+  readonly datetime: Date
   readonly measured_angle: Angle
   readonly sun_declination: Angle
   readonly index_error: Angle
@@ -20,7 +20,7 @@ export class Sextant {
    * @param index_error The index error of the sextant.
    */
   constructor(measuring_time: Date, measured_angle: Angle, sun_declination: Angle, index_error?: Angle) {
-    this.measuring_time = measuring_time
+    this.datetime = measuring_time
     this.measured_angle = measured_angle
     this.sun_declination = sun_declination
     this.index_error = index_error ?? Angle.zero
@@ -51,7 +51,27 @@ export class Sextant {
    * @return The calculated longitude.
    */
   calculate_lng(): Coordinate {
-    // TODO: Implement
-    return new Coordinate(0, Hemisphere.West)
+    const sunPeakGreenwich = Sextant.toDecimalTime(new Date(2021, 11, 6, 11, 43))
+    const sunPeakMeasured = Sextant.toDecimalTime(this.datetime)
+    const sunPeakHourDelta = sunPeakMeasured - sunPeakGreenwich
+
+    // The earth rotates once around the sun in 24h. However, our input refer to "gets sun peak before or after
+    // Greenwich", so only maximum 12 hours earlier or later.
+    // Longitudes are divided into -180° to +180°.
+    // So map the hour fraction of 24h to a degree fraction of 180°.
+    let degreeDelta = sunPeakHourDelta / 12 * 180
+    let hemisphere: Hemisphere
+    if (degreeDelta >= 0.0) {
+      hemisphere = Hemisphere.East
+    } else {
+      hemisphere = Hemisphere.West
+    }
+    degreeDelta = Math.abs(degreeDelta)
+
+    return new Coordinate(degreeDelta, hemisphere)
+  }
+
+  static toDecimalTime(date: Date): number {
+    return date.getHours() + date.getMinutes()/60 + date.getSeconds()/3600;
   }
 }
