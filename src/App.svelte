@@ -6,8 +6,10 @@
     let timezoneStr = "0"
     $: timezone = Number.parseFloat(timezoneStr)
 
-    let angleStr = "42° 11' 10\""
-    $: angle = Angle.from_str(angleStr)
+    let angleDegrees = 42
+    let angleMinutes = 10
+    let angleSeconds = 37
+    $: angle = Angle.from_deg_min_sec(angleDegrees, angleMinutes, angleSeconds)
 
     let dateStr = new Date().toISOString().substring(0, 10) // https://stackoverflow.com/a/14246394
     let timeStr = "12:00"
@@ -39,46 +41,52 @@
 <main>
     <h1>Sextant Calculator</h1>
 
-    <label for="timezone">Your timezone</label>
-    <select id="timezone" bind:value={timezoneStr}>
-        <option value="-12">UTC-12</option>
-        <option value="-11">UTC-11</option>
-        <option value="-10">UTC-10</option>
-        <option value="-9">UTC-9</option>
-        <option value="-8">UTC-8</option>
-        <option value="-7">UTC-7</option>
-        <option value="-6">UTC-6</option>
-        <option value="-5">UTC-5</option>
-        <option value="-4">UTC-4</option>
-        <option value="-3">UTC-3</option>
-        <option value="-2">UTC-2</option>
-        <option value="-1">UTC-1</option>
-        <option value="0">UTC • Coordinated Universal Time</option>
-        <option value="+1">UTC+1 • Central European Time</option>
-        <option value="+2">UTC+2 • Central European Summer Time</option>
-        <option value="+3">UTC+3</option>
-        <option value="+4">UTC+4</option>
-        <option value="+5">UTC+5</option>
-        <option value="+6">UTC+6</option>
-        <option value="+7">UTC+7</option>
-        <option value="+8">UTC+8</option>
-        <option value="+9">UTC+9</option>
-        <option value="+10">UTC+10</option>
-        <option value="+11">UTC+11</option>
-        <option value="+12">UTC+12</option>
-    </select>
-
     <section>
         <label for="date">Measuring Date</label>
         <input id="date" type="date" bind:value={dateStr}>
+
+        <label for="timezone">Your timezone</label>
+        <select id="timezone" bind:value={timezoneStr}>
+            <option value="-12">UTC-12</option>
+            <option value="-11">UTC-11</option>
+            <option value="-10">UTC-10</option>
+            <option value="-9">UTC-9</option>
+            <option value="-8">UTC-8</option>
+            <option value="-7">UTC-7</option>
+            <option value="-6">UTC-6</option>
+            <option value="-5">UTC-5</option>
+            <option value="-4">UTC-4</option>
+            <option value="-3">UTC-3</option>
+            <option value="-2">UTC-2</option>
+            <option value="-1">UTC-1</option>
+            <option value="0">UTC/GMT</option>
+            <option value="+1">UTC+1</option>
+            <option value="+2">UTC+2</option>
+            <option value="+3">UTC+3</option>
+            <option value="+4">UTC+4</option>
+            <option value="+5">UTC+5</option>
+            <option value="+6">UTC+6</option>
+            <option value="+7">UTC+7</option>
+            <option value="+8">UTC+8</option>
+            <option value="+9">UTC+9</option>
+            <option value="+10">UTC+10</option>
+            <option value="+11">UTC+11</option>
+            <option value="+12">UTC+12</option>
+        </select>
+
+        <label for="time">Time of sun peak</label>
+        <input id="time" type="time" bind:value={timeStr}>
     </section>
 
     <section>
-        <label for="time">Time of sun peak</label>
-        <input id="time" type="time" bind:value={timeStr}>
 
-        <label for="angle">Measured angle at sun peak</label>
-        <input id="angle" type="text" bind:value={angleStr}>
+
+        <div style="display: inline;">
+            <label for="angle_degrees">Measured angle at sun peak</label>
+            <input class="degree" id="angle_degrees" type="number" bind:value={angleDegrees}>°
+            <input class="degree" id="angle_minutes" type="number" bind:value={angleMinutes}>'
+            <input class="degree" id="angle_seconds" type="number" bind:value={angleSeconds}>"
+        </div>
     </section>
 
     <section>
@@ -98,14 +106,14 @@
         background-color: #30363c;
         padding: 10px;
         border-radius: 5px;
-    }
-
-    main {
-        /* Causes the footer to appear only when scrolling down, since main always takes up at least one full page */
-        min-height: 100vh;
+        font-size: inherit;
     }
 
     section {
         padding-bottom: 15px;
+    }
+
+    .degree {
+        width: 100px;
     }
 </style>

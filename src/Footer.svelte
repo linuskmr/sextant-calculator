@@ -1,19 +1,39 @@
 <footer>
     <p>
-        <strong>Sextant Calculator — v0.0.1</strong><br>
-        <small>by <a href="https://github.com/linuskmr">linuskmr</a></small>
+        <strong>Sextant Calculator — v0.1.0</strong><br>
+        <small>by <a href="https://github.com/linuskmr">linuskmr</a> on
+            <abbr title="Platform for hosting open-source code">GitHub</abbr></small>
     </p>
     <ul>
-        <li>👷 Build with <a href="https://svelte.dev">Svelte</a></li>
-        <li>🚀 Deployed via <a href="https://vercel.com/">Vercel</a></li>
-        <li>📝 Sourcecode on <a href="https://github.com/linuskmr/sextant-calculator">GitHub</a></li>
+        <li>👷 Build with
+            <a
+                title="Framework/Compiler for building web frontends"
+                href="https://svelte.dev">
+                Svelte
+            </a>
+        </li>
+        <li>
+            🚀 Deployed on
+            <a
+                title="Web hosting service"
+                href="https://cloudflare.com/">
+                Cloudflare
+            </a>
+        </li>
+        <li>📝 Sourcecode on
+            <a
+                title="Platform for hosting open-source code"
+                href="https://github.com/linuskmr/sextant-calculator">
+                GitHub
+            </a>
+        </li>
     </ul>
 </footer>
 
 <style>
     footer {
         margin: 0;
-        background-color: #30363c;
+        background-color: #007DE1;
         color: white;
         padding: 20px;
     }
