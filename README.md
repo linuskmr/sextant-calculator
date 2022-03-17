@@ -2,7 +2,7 @@
 
 Calculates the latitude with celestial navigation based on an elevation angle measurement of the sun using a sextant.
 
-[Live Demo](https://sextant-calculator.vercel.app)
+[Live Demo](https://sextant-calculator.pages.dev)
 
 ## Run
 
