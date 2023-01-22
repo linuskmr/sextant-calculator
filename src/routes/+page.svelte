@@ -91,7 +91,7 @@
       <label for="culmination_greenwich">
         Reference <a href="https://en.wikipedia.org/wiki/Culmination">Culmination</a> Time on <a href="https://en.wikipedia.org/wiki/Prime_meridian">Prime Meridian</a>, e.g. in Greenwich<br>
         <small>
-          Calculation not yet implemented; Find it out yourself on <a href="https://www.suncalc.org/#/51.4779,0.0000,5/">suncalc.org</a>
+          Automatic calculation not yet implemented; Find it out yourself on <a href="https://www.suncalc.org/#/51.4779,0.0000,5/">suncalc.org</a> manually.
         </small>
         <br>
       </label>
