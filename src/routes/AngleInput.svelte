@@ -1,13 +1,14 @@
-<script>
+<script lang="ts">
 	import { Angle } from "$lib/angle";
 
 	export let id = "";
+	export let startAngle = Angle.zero;
 
-	let degrees = 0;
-	let minutes = 0;
-	let seconds = 0;
+	let degrees = startAngle.degrees;
+	let minutes = startAngle.minutes;
+	let seconds = startAngle.seconds;
 
-	export let value = Angle.zero;
+	export let value: Angle;
 	$: value = Angle.from_deg_min_sec(degrees, minutes, seconds);
 </script>
 
