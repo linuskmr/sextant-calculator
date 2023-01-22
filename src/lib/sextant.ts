@@ -7,28 +7,51 @@ import { Hemisphere } from "./hemisphere";
  * A sextant that can determine the position based on a measurement.
  */
 export class Sextant {
-  readonly datetime: Date;
-  readonly measured_angle: Angle;
-  readonly sun_declination: Angle;
-  readonly index_error: Angle;
+  /**
+   * The time at which the measurement was made.
+   */
+  readonly measuringTime: Date;
+
+  /**
+   * The measured horizontal angle.
+   */
+  readonly measuredElevation: Angle;
+
+  /**
+   * The sun declination of the day on which the measurement was made.
+   */
+  readonly sunDeclination: Angle;
+
+  /**
+   * The index error of the sextant.
+   */
+  readonly indexError: Angle;
+
+  /**
+   * The time at which the sun peaked in Greenwich.
+   */
+  readonly culminationTimePrimeMeridian: Date;
 
   /**
    * Creates a new Sextant.
-   * @param measuring_time The time at which the measurement was made.
-   * @param measured_angle The measured horizontal angle.
-   * @param sun_declination The sun declination of the day on which the measurement was made.
-   * @param index_error The index error of the sextant.
+   * @param measuringTime The time at which the measurement was made.
+   * @param measuredElevation The measured horizontal angle.
+   * @param sunDeclination The sun declination of the day on which the measurement was made.
+   * @param culminationTimeGreenwich The time at which the sun peaked in Greenwich.
+   * @param indexError The index error of the sextant.
    */
   constructor(
-    measuring_time: Date,
-    measured_angle: Angle,
-    sun_declination: Angle,
-    index_error?: Angle
+    measuringTime: Date,
+    measuredElevation: Angle,
+    sunDeclination: Angle,
+    culminationTimeGreenwich: Date,
+    indexError?: Angle,
   ) {
-    this.datetime = measuring_time;
-    this.measured_angle = measured_angle;
-    this.sun_declination = sun_declination;
-    this.index_error = index_error ?? Angle.zero;
+    this.culminationTimePrimeMeridian = culminationTimeGreenwich
+    this.measuringTime = measuringTime;
+    this.measuredElevation = measuredElevation;
+    this.sunDeclination = sunDeclination;
+    this.indexError = indexError ?? Angle.zero;
   }
 
   /**
@@ -36,8 +59,8 @@ export class Sextant {
    * @return The calculated position.
    */
   get position(): Position {
-    const lat = this.calculate_lat();
-    const lng = this.calculate_lng();
+    const lat = this.calculateLat();
+    const lng = this.calculateLng();
     return new Position(lat, lng);
   }
 
@@ -45,11 +68,11 @@ export class Sextant {
    * Calculates the latitude based on the measurement.
    * @return The calculated longitude.
    */
-  calculate_lat(): Coordinate {
+  calculateLat(): Coordinate {
     const corrected_measurement =
-      this.measured_angle.valueOf() + this.index_error.valueOf();
+      this.measuredElevation.valueOf() - this.indexError.valueOf();
     const celestial_equator_height =
-      corrected_measurement.valueOf() - this.sun_declination.valueOf();
+      corrected_measurement.valueOf() - this.sunDeclination.valueOf();
     return new Coordinate(
       90 - celestial_equator_height.valueOf(),
       Hemisphere.North
@@ -60,12 +83,9 @@ export class Sextant {
    * Calculates the longitude based on the measurement.
    * @return The calculated longitude.
    */
-  calculate_lng(): Coordinate {
-    const sunPeakGreenwich = Sextant.toDecimalTime(
-      new Date(2021, 11, 6, 11, 43)
-    );
-    const sunPeakMeasured = Sextant.toDecimalTime(this.datetime);
-    const sunPeakHourDelta = sunPeakMeasured - sunPeakGreenwich;
+  calculateLng(): Coordinate {
+    const sunPeakMeasured = Sextant.toDecimalTime(this.measuringTime);
+    const sunPeakHourDelta = sunPeakMeasured - Sextant.toDecimalTime(this.culminationTimePrimeMeridian);
 
     // The earth rotates once around the sun in 24h. However, our input refer to "gets sun peak before or after
     // Greenwich", so only maximum 12 hours earlier or later.
