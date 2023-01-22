@@ -76,4 +76,16 @@ export class Angle {
     const sec_str = sec_numbers[0].padStart(2) + "." + (sec_numbers[1] ?? "0");
     return `${deg_str}° ${min_str}' ${sec_str}"`;
   }
+
+  get degrees(): number {
+    return Math.floor(this.angle);
+  }
+
+  get minutes(): number {
+    return Math.floor((this.angle - this.degrees) * 60);
+  }
+
+  get seconds(): number {
+    return (this.angle - this.degrees - (this.minutes / 60)) * 3600;
+  }
 }
