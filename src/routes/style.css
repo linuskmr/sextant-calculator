@@ -1,5 +1,5 @@
 :root {
-  --color-scheme: light dark;
+  --color-scheme: dark;
 }
 
 html,
@@ -22,6 +22,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
+  line-height: 1.5;
   display: flex;
   flex-direction: column;
 }
@@ -36,11 +37,6 @@ footer {
   flex-shrink: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: underline;
-}
-
 abbr {
   cursor: help;
 }
@@ -53,14 +49,19 @@ label {
 input,
 button,
 select,
-textarea {
+textarea,
+fieldset {
   font-size: inherit;
   padding: 0.4em;
-  margin: 0 0 0.5em 0;
+  margin: 0 0 1em 0;
   border: 1px solid #ccc;
-  border-radius: 2px;
+  border-radius: 5px;
 }
 
-input:disabled {
-  color: #ccc;
+fieldset {
+  padding: 0.7em;
+}
+
+math {
+  margin: 10px;
 }

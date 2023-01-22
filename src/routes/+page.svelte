@@ -1,171 +1,108 @@
 <script lang="ts">
   import { Sextant } from "../lib/sextant";
   import { Angle } from "../lib/angle";
-  import Footer from "./Footer.svelte";
   import {
     sunDeclination as calculateSunDeclination,
     dayOfYear,
   } from "$lib/sun_declination";
+  import Footer from "./Footer.svelte";
+  import AngleInput from "./AngleInput.svelte";
 
   let timezoneStr = "0"; // Default to UTC/GMT timezone
   $: timezone = Number.parseFloat(timezoneStr);
 
   // Measured angle
-  let angleDegrees = 25;
-  let angleMinutes = 16;
-  let angleSeconds = 0;
-  $: angle = Angle.from_deg_min_sec(angleDegrees, angleMinutes, angleSeconds);
+  let measuredAngle = Angle.zero;
 
   // Index error
-  let indexErrorDegrees = 0;
-  let indexErrorMinutes = 0;
-  let indexErrorSeconds = 0;
-  $: indexError = Angle.from_deg_min_sec(
-    indexErrorDegrees,
-    indexErrorMinutes,
-    indexErrorSeconds
-  );
+  let indexError = Angle.zero;
 
   // Measuring date and time
-  let dateStr = new Date(Date.UTC(2022, /*March*/ 2, 13))
-    .toISOString()
-    .substring(0, 10); // https://stackoverflow.com/a/14246394
-  let timeStr = "11:34";
+  let datetimeStr = new Date(Date.UTC(2022, /*February*/1, 12, 12, 30)).toISOString().substring(0, 16)
 
-  // Parse measuring date and time to a Date object
+  // Parse measuring datetimeStr to Date object
   let datetime: Date = new Date();
   $: {
-    console.log("Date string from input", dateStr);
-    // Date
-    const [yearStr, monthStr, dayStr] = dateStr.split("-");
-    const year = Number.parseInt(yearStr);
-    const month = Number.parseInt(monthStr) - 1; // January in Javascript is month 0
-    const day = Number.parseInt(dayStr);
-    datetime.setUTCFullYear(year, month, day);
-
-    // Time
-    const [hoursStr, minutesStr] = timeStr.split(":");
-    console.log("timezone", timezone);
-    const hours = Number.parseInt(hoursStr) - timezone;
-    const hoursUTC = hours + timezone;
-    const minutes = Number.parseInt(minutesStr);
-    datetime.setUTCHours(hoursUTC, minutes);
-
-    datetime = datetime; // Needed for Svelte to recognize that this value changed
+    datetime = new Date(datetimeStr);
   }
 
   // Get the sun declination for the given date
   $: sunDeclination = calculateSunDeclination(dayOfYear(datetime));
 
   // Calculate the sextant position
-  $: sextant = new Sextant(datetime, angle, sunDeclination, indexError);
+  $: sextant = new Sextant(datetime, measuredAngle, sunDeclination, indexError);
 </script>
 
-<main>
-  <h1>Sextant Calculator</h1>
+<h1>Sextant Calculator</h1>
 
-  <section>
-    <label for="date">Measuring Date</label>
-    <input id="date" type="date" bind:value={dateStr} />
+<h2>Inputs</h2>
+<form>
+  <fieldset>
+      <legend>Time</legend>
 
-    <label for="timezone">Your Timezone</label>
-    <select id="timezone" bind:value={timezoneStr}>
-      <option value="-12">UTC-12</option>
-      <option value="-11">UTC-11</option>
-      <option value="-10">UTC-10</option>
-      <option value="-9">UTC-9</option>
-      <option value="-8">UTC-8</option>
-      <option value="-7">UTC-7</option>
-      <option value="-6">UTC-6</option>
-      <option value="-5">UTC-5</option>
-      <option value="-4">UTC-4</option>
-      <option value="-3">UTC-3</option>
-      <option value="-2">UTC-2</option>
-      <option value="-1">UTC-1</option>
-      <option value="0">UTC/GMT</option>
-      <option value="+1">UTC+1</option>
-      <option value="+2">UTC+2</option>
-      <option value="+3">UTC+3</option>
-      <option value="+4">UTC+4</option>
-      <option value="+5">UTC+5</option>
-      <option value="+6">UTC+6</option>
-      <option value="+7">UTC+7</option>
-      <option value="+8">UTC+8</option>
-      <option value="+9">UTC+9</option>
-      <option value="+10">UTC+10</option>
-      <option value="+11">UTC+11</option>
-      <option value="+12">UTC+12</option>
-    </select>
+      <!-- <label for="date">
+          Measuring Date<br>
+          <input id="date" type="date" bind:value={dateStr} />
+      </label> -->
 
-    <label for="time">Time of Sun Peak</label>
-    <input id="time" type="time" bind:value={timeStr} />
-  </section>
+      <label for="datetime">Date & Time</label>
+      <input type="datetime-local" id="datetime" bind:value={datetimeStr} />
 
-  <section>
-    <div style="display: inline;">
-      <label for="angle_degrees">Measured Angle at Sun Peak</label>
-      <input
-        class="degree"
-        id="angle_degrees"
-        type="number"
-        bind:value={angleDegrees}
-      />°
-      <input
-        class="degree"
-        id="angle_minutes"
-        type="number"
-        bind:value={angleMinutes}
-      />'
-      <input
-        class="degree"
-        id="angle_seconds"
-        type="number"
-        bind:value={angleSeconds}
-      />"
-    </div>
+      <label for="timezone">Timezone</label>
 
-    <div style="display: inline;">
-      <label for="angle_degrees">Index Error</label>
-      <input
-        class="degree"
-        id="index_error_degrees"
-        type="number"
-        bind:value={indexErrorDegrees}
-      />°
-      <input
-        class="degree"
-        id="index_error_minutes"
-        type="number"
-        bind:value={indexErrorMinutes}
-      />'
-      <input
-        class="degree"
-        id="index_error_seconds"
-        type="number"
-        bind:value={indexErrorSeconds}
-      />"
-    </div>
-  </section>
+      <select id="timezone" bind:value={timezoneStr}>
+          <option value="-12">UTC-12</option>
+          <option value="-11">UTC-11</option>
+          <option value="-10">UTC-10</option>
+          <option value="-9">UTC-9</option>
+          <option value="-8">UTC-8</option>
+          <option value="-7">UTC-7</option>
+          <option value="-6">UTC-6</option>
+          <option value="-5">UTC-5</option>
+          <option value="-4">UTC-4</option>
+          <option value="-3">UTC-3</option>
+          <option value="-2">UTC-2</option>
+          <option value="-1">UTC-1</option>
+          <option value="0">UTC/GMT</option>
+          <option value="+1">UTC+1</option>
+          <option value="+2">UTC+2</option>
+          <option value="+3">UTC+3</option>
+          <option value="+4">UTC+4</option>
+          <option value="+5">UTC+5</option>
+          <option value="+6">UTC+6</option>
+          <option value="+7">UTC+7</option>
+          <option value="+8">UTC+8</option>
+          <option value="+9">UTC+9</option>
+          <option value="+10">UTC+10</option>
+          <option value="+11">UTC+11</option>
+          <option value="+12">UTC+12</option>
+      </select>
+  </fieldset>
 
-  <br /><br />
+  <fieldset>
+      <legend>Sextant Readings</legend>
 
-  <section>
-    <span>Position</span>
-    <pre style="width: max-content">{sextant.position}</pre>
+      <label for="measured_angle">Measured Angle at Sun Peak</label>
+      <AngleInput id="measured_angle" bind:value={measuredAngle} />
 
-    <a
+      <label for="index_error">Index Error</label>
+      <AngleInput id="index_error" bind:value={indexError} />
+  </fieldset>
+</form>
+
+<section>
+  <h2>Results</h2>
+
+  <span>Computed Sun Declination</span>
+  <pre>{sunDeclination.toString()}</pre>
+
+  <span>Computed Position</span>
+  <pre>{sextant.position}</pre>
+
+  <a
       href="https://www.google.de/maps/place/{sextant.position
-        .latitude},{sextant.position.longitude}"
-    >
-      Open position on Google Maps
-    </a>
-  </section>
-</main>
-
-<Footer />
-
-<style>
-  .degree {
-    width: 100px;
-  }
-</style>
+      .latitude},{sextant.position.longitude}"
+  >
+      Open on Google Maps
+  </a>
+</section>
