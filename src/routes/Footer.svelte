@@ -1,6 +1,6 @@
 <footer>
   <p>
-    <strong>Sextant Calculator — v0.3.1</strong><br />
+    <strong>Sextant Calculator — v1.0.0</strong><br />
     <small
       >by <a href="https://github.com/linuskmr">linuskmr</a> on
       <abbr title="Platform for hosting open-source code">GitHub</abbr></small

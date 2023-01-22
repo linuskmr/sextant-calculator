@@ -20,8 +20,6 @@ export function sunDeclination(days: number): Angle {
 
 /**
  * Returns the day of the year for a given date. Used with `sunDeclination()`.
- *
- *
  */
 export function dayOfYear(date: Date): number {
   const firstDayOfYear = new Date(date.getFullYear(), /*January*/ 0, 1);
