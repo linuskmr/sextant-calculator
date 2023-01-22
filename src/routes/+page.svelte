@@ -4,22 +4,26 @@
     import Footer from "./Footer.svelte";
 	import { sunDeclination as calculateSunDeclination, dayOfYear } from "$lib/sun_declination";
 
-    let timezoneStr = "0"
+    let timezoneStr = "0" // Default to UTC/GMT timezone
     $: timezone = Number.parseFloat(timezoneStr)
 
+    // Measured angle
     let angleDegrees = 23
     let angleMinutes = 29
     let angleSeconds = 37
     $: angle = Angle.from_deg_min_sec(angleDegrees, angleMinutes, angleSeconds)
 
+    // Index error
 	let indexErrorDegrees = 0
 	let indexErrorMinutes = 0
 	let indexErrorSeconds = 0
 	$: indexError = Angle.from_deg_min_sec(indexErrorDegrees, indexErrorMinutes, indexErrorSeconds)
 
+    // Measuring date and time
     let dateStr = new Date(Date.UTC(2022, /*February*/1, 7)).toISOString().substring(0, 10) // https://stackoverflow.com/a/14246394
     let timeStr = "11:34"
 
+    // Parse measuring date and time to a Date object
     let datetime: Date = new Date()
     $: {
         console.log("Date string from input", dateStr)
@@ -40,8 +44,10 @@
         datetime = datetime // Needed for Svelte to recognize that this value changed
     }
 
+    // Get the sun declination for the given date
     $: sunDeclination = calculateSunDeclination(dayOfYear(datetime))
 
+    // Calculate the sextant position
     $: sextant = new Sextant(datetime, angle, sunDeclination, indexError)
 
 </script>
