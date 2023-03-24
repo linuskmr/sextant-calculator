@@ -6,6 +6,7 @@
     dayOfYear,
   } from "$lib/sun_declination"
   import AngleInput from "./AngleInput.svelte"
+  import CameraSextant from "./camera_sextant.svelte";
 
 
   let timezoneStr = "+1"; // Default to CET timezone
@@ -100,6 +101,8 @@
 
   <fieldset>
       <legend>Sextant Readings</legend>
+
+      <CameraSextant bind:measuredElevation={measuredElevation} />
 
       <label for="measured_elevation">
         Measured <a href="https://www.pveducation.org/pvcdrom/properties-of-sunlight/elevation-angle">Elevation Angle</a> at <a href="https://en.wikipedia.org/wiki/Culmination">Culmination</a>
