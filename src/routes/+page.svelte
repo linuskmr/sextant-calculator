@@ -27,9 +27,9 @@
     // Trying to parse it anyways would result in an exception later on the in the calculation,
     // causing the UI to stop updating on new inputs.
     if (!isNaN(Date.parse(datetimeStr))) {
-    datetime = new Date(datetimeStr)
-    datetime.setHours(datetime.getHours() - timezone)
-    datetime = datetime // Force reactivity
+      datetime = new Date(datetimeStr)
+      datetime.setHours(datetime.getHours() - timezone)
+      datetime = datetime // Force reactivity
     }
   }
 
@@ -38,6 +38,9 @@
 
   $: {
     const [culminationPrimeMeridianHours, culminationPrimeMeridianMinutes] = culminationTimePrimeMeridianStr.split(":")
+    culminationTimePrimeMeridian.setDate(datetime.getDate())
+    culminationTimePrimeMeridian.setMonth(datetime.getMonth())
+    culminationTimePrimeMeridian.setFullYear(datetime.getFullYear())
     culminationTimePrimeMeridian.setHours(Number.parseInt(culminationPrimeMeridianHours))
     culminationTimePrimeMeridian.setMinutes(Number.parseInt(culminationPrimeMeridianMinutes))
     culminationTimePrimeMeridian = culminationTimePrimeMeridian // Force reactivity
