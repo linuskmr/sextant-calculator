@@ -23,9 +23,14 @@
   // Parse measuring datetimeStr to Date object
   let datetime: Date = new Date()
   $: {
+    // Check if the datetimeStr is a valid date.
+    // Trying to parse it anyways would result in an exception later on the in the calculation,
+    // causing the UI to stop updating on new inputs.
+    if (!isNaN(Date.parse(datetimeStr))) {
     datetime = new Date(datetimeStr)
     datetime.setHours(datetime.getHours() - timezone)
     datetime = datetime // Force reactivity
+    }
   }
 
   let culminationTimePrimeMeridianStr = "12:14";
